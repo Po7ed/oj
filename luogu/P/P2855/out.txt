@@ -1,0 +1,95 @@
+0 1000000000
+mid:500000000
+too big
+0 499999999
+mid:249999999
+too big
+0 249999998
+mid:124999999
+too big
+0 124999998
+mid:62499999
+too big
+0 62499998
+mid:31249999
+too big
+0 31249998
+mid:15624999
+too big
+0 15624998
+mid:7812499
+too big
+0 7812498
+mid:3906249
+too big
+0 3906248
+mid:1953124
+too big
+0 1953123
+mid:976561
+too big
+0 976560
+mid:488280
+too big
+0 488279
+mid:244139
+too big
+0 244138
+mid:122069
+too big
+0 122068
+mid:61034
+too big
+0 61033
+mid:30516
+too big
+0 30515
+mid:15257
+too big
+0 15256
+mid:7628
+too big
+0 7627
+mid:3813
+too small
+3813 7627
+mid:5720
+too big
+3813 5719
+mid:4766
+too big
+3813 4765
+mid:4289
+too small
+4289 4765
+mid:4527
+too big
+4289 4526
+mid:4407
+too small
+4407 4526
+mid:4466
+too big
+4407 4465
+mid:4436
+too small
+4436 4465
+mid:4450
+too small
+4450 4465
+mid:4457
+too small
+4457 4465
+mid:4461
+too big
+4457 4460
+mid:4458
+too small
+4458 4460
+mid:4459
+too small
+4459 4460
+mid:4459
+too small
+4460 4460
+4460

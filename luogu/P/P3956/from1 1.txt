@@ -1,0 +1,121 @@
+from1 1
+  sameto2 1 0
+  magicto1 2 2
+from2 1
+  diffto3 1 1
+  magicto2 2 2
+from3 1
+  sameto4 1 1
+  diffto3 2 2
+from4 1
+  diffto5 1 2
+  magicto4 2 3
+from1 2
+from3 2
+  magicto3 3 4
+from2 2
+from5 1
+  magicto6 1 4
+  magicto5 2 4
+from4 2
+from6 1
+  diffto7 1 5
+  diffto6 2 5
+from3 3
+from5 2
+from6 2
+  magicto7 2 7
+  sameto6 3 5
+from7 1
+  magicto8 1 7
+from6 3
+  diffto7 3 6
+  magicto6 4 7
+from7 3
+  magicto8 3 8
+  magicto7 4 8
+from7 2
+  sameto8 2 7
+from6 4
+  diffto6 5 8
+from8 1
+from8 2
+  magicto9 2 9
+from7 4
+from6 5
+  magicto5 5 10
+  diffto6 6 9
+from8 3
+from9 2
+from6 6
+  magicto5 6 11
+  magicto7 6 11
+  magicto6 7 11
+from5 5
+  sameto4 5 10
+from4 5
+  magicto3 5 12
+  magicto4 4 12
+  magicto4 6 12
+from6 7
+  diffto7 7 12
+from5 6
+from7 6
+from4 6
+  sameto4 7 12
+from7 7
+  diffto8 7 13
+  sameto7 8 12
+from3 5
+  sameto2 5 12
+from4 7
+  diffto3 7 13
+  magicto4 8 14
+from7 8
+  diffto8 8 13
+  sameto7 9 12
+from2 5
+  magicto1 5 14
+  diffto2 4 13
+  diffto2 6 13
+from7 9
+  magicto6 9 14
+  magicto8 9 14
+from4 4
+from8 8
+  diffto9 8 14
+from3 7
+  magicto2 7 15
+  sameto3 8 13
+from2 6
+  sameto1 6 13
+from8 7
+  diffto9 7 14
+from3 8
+  magicto2 8 15
+  magicto3 9 15
+from1 6
+  magicto1 7 15
+from2 4
+  magicto1 4 15
+from1 5
+from8 9
+from4 8
+from6 9
+  diffto5 9 15
+from9 8//this!
+from9 7
+  sameto9 6 14
+from9 6
+  sameto9 5 14
+from9 5
+  diffto8 5 15
+  magicto9 4 16
+from1 7
+from1 4
+from8 5
+from3 9
+from2 8
+from2 7
+from5 9
+from9 4

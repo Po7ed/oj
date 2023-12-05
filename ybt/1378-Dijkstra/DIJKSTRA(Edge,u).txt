@@ -1,0 +1,23 @@
+DIJKSTRA(Edge,u)
+  vis[u]=true
+  for i=0 to Edge.length-1
+    if !vis[i]
+      dist[i]=Edge[u][i]
+      if Edge[u][i]!=INF
+        p[i]=u
+      else
+        p[i]=-1
+  while true
+    mind=INF
+    t=-1
+    for j=0 to Edge.length-1
+      if !vis[j]&&dist[j]<mind
+        mind=dist[j]
+        t=j
+    if t==-1
+      return dist,p
+    vis[t]=true
+    for j=0 to Edge.length-1
+      if Edge[t][j]!=INF&&dist[j]>dist[t]+Edge[t][j]
+        dist[j]=dist[t]+Edge[t][j]
+        p[j]=t
