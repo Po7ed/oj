@@ -1,0 +1,34 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+#define int long long
+
+const int _ = 1e5 + 10;
+
+int n, t, k, a[_], f[_];
+
+signed main() {
+	cin >> n >> t >> k;
+	for (int i = 1; i <= n; i++) cin >> a[i];
+	memset(f, 0x3f, sizeof(f));
+	f[0] = 0;
+	for (int i = 1, j = 0, tmp = f[1]; i <= n; i++) {
+//		for (int j = 0; j < i; j++) {
+//			int tmp = max(k, (a[i] - a[j + 1]) * 2);
+//			f[i] = min(f[i], f[j] + a[i] - a[j] + tmp);
+//		}
+		while (k <= 2 * (a[i] - a[j + 1])) {
+			tmp = min(tmp, f[j] - 2 * a[j + 1]);
+			j++;
+		}
+		f[i] = min(f[i], min(f[j] + k, 2 * a[i] + tmp));
+	}
+//	cout << f[n] + t - a[n];
+	cout << t + f[n];
+}
+
+/*
+f[i] = min(f[j] + a[i] - a[j] + max(k, 2 * (a[i] - a[j + 1]))
+2(a[i] - a[j + 1] <= k -> f[i] = min(f[j] + k)
+2(a[i] - a[j + 1] > k -> f[i] = min(f[j] + 2(a[i] - a[j + 1])
+*/

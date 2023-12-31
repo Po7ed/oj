@@ -1,0 +1,458 @@
+#include<bits/extc++.h>
+#include<bits/stdc++.h>
+//#pragma GCC optimize(2)
+//本代码含有小众情感元素，建议满 18 周岁后观看
+//8:53 突然感觉行，就先放掉T3了。
+//所有有乘操作（无性质A）的都是树
+//然后有性质A的话就简单根分，边定向，修改的时候打lazytag并且直接修改出边，查询的时候累加入边的lazytag
+//然后有乘操作的都是树么
+//见过这题？
+//考虑一个点对自己和父亲的影响可以轻松的即时反映
+//对儿子的影响就不行了
+//那么考虑让儿子被操作时再继承父亲的影响，懒标记一下
+//然后就会有问题是不同的儿子可能继承了不同的部分影响
+//然后就需要在儿子处再记录
+//然后又会出现优先级的问题，但是应当可以讨论
+//思考
+//直接类似线段树2会不会去世
+//感觉，应该行，其实
+//9:17 开码。先码根号分治部分。
+//9:44 全体一致特别考试写的还是很精彩的，结局稍微有点难以接受但是剧情设计感觉完全高于之前全部。
+//10:10 感觉行。小样例过了。
+//没大样例。还得拍啊。
+//T3，怎么办。
+//10:19 小数据挂了！！！
+//thinking
+//注意到如果从儿子那里得到的修改也不能直接一次性加上，还要考虑什么
+//哦哦，还得要先pushdown父亲
+//n=10小数据没毛病
+//n=3e5大数据也没毛病
+//但是暴力算法在答辩数据面前比我这个东西还要优。
+//唉。
+//拍个根号分治。
+//我根号分治RE了！！！
+//gen挂了，输出了操作2，唐氏儿。
+//gen又挂了，重边，还忘了minmax，唐氏儿。
+//糖完了。我是若智。
+//现在超级小数据过了。  
+//大点的也能过。 
+//感觉差不多的了。  
+//10:52 我刚刚能过拍的树部分过不了了！！！！
+//真的是，手生了。
+//11:09、我是真若智。
+//gen输出的数据里有乘0。
+//麻了、现在又哪里没开long long
+//自闭了。查不出来。
+//不得不使用我不喜欢的#define int long long
+//11:16 差不多得了。交。
+#define trtag __gnu_pbds::tree_order_statistics_node_update
+#define priority_queue __gnu_pbds::priority_queue
+#define unordered_map __gnu_pbds::gp_hash_table
+#define debug cerr<<"Hwy is homo.\n"
+#define all(x) x.begin(),x.end()
+#define ull unsigned long long
+#define pii pair<int,int>
+#define Inf (int)INFINITY
+#define inf 0x3f3f3f3f
+#define int long long
+#define pb push_back
+#define ll long long
+#define endl '\n'
+#define y second
+#define x first
+#define DEBUG
+using namespace std;
+using namespace __gnu_cxx;
+const int N=4e5+10,mod=998244353;
+void read(){};
+template<class T1,class ...T2>
+inline void read(T1& ret,T2&... rest){
+	ret=0;char c=getchar();bool f=false;
+	while(c<'0'||c>'9'){f=c=='-';c=getchar();}
+	while(c>='0'&&c<='9'){ret=ret*10+c-'0';c=getchar();}
+	if(f)ret=-ret;
+	read(rest...);
+}
+#define cin(...) read(__VA_ARGS__)
+inline void print(int ret){
+	static int sta[35];
+	int x=ret,top=0;
+	bool f=(ret<0);
+	if(ret<0) x=-x;
+	do{sta[top++]=x%10,x/=10;}while(x);
+	if(f) putchar('-');
+	while(top) putchar(sta[--top]+48);
+}
+vector<int>nxt[N];
+int n,m,q,fa[N],vl[N],dn1[N],dn2[N],lz1[N],lz2[N];
+namespace sqrtdivide{
+	pii e[N];
+	int deg[N],add[N],val[N];
+	void work(){
+		for(int i=1;i<=m;i++)cin(e[i].x,e[i].y),deg[e[i].x]++,deg[e[i].y]++;
+		for(int i=1;i<=m;i++){
+			if(deg[e[i].x]<deg[e[i].y]||(deg[e[i].x]==deg[e[i].y]&&e[i].x<e[i].y))nxt[e[i].x].pb(e[i].y);
+			else nxt[e[i].y].pb(e[i].x);
+		}
+		for(int op,u,ad,res;q;q--){
+			cin(op);
+			if(op==1){
+				cin(u,ad),val[u]=(val[u]+ad)%mod;
+				for(int v:nxt[u])add[v]=(add[v]+ad)%mod;
+			}
+			else{
+				cin(u),res=(val[u]+add[u])%mod;
+				for(int v:nxt[u])res=(res+val[v])%mod;
+				print(res),putchar(endl);
+			}
+		}
+	}
+}
+void dfs(int u,int f){fa[u]=f;for(int v:nxt[u])if(v!=f)dfs(v,u);}
+int q_pow(int a,int b){
+	int res=1;
+	for(;b;b>>=1){
+		if(b&1)res=res*1ll*a%mod;
+		a=a*1ll*a%mod;
+	}
+	return res;
+}
+void pushdown(int u){
+	if(u>1){
+		int ml=lz2[fa[u]]*1ll*q_pow(dn2[u],mod-2)%mod,ad=(lz1[fa[u]]-dn1[u]*1ll*ml%mod+mod)%mod;
+//		cerr<<"push_down "<<u<<" mul:"<<ml<<" add:"<<ad<<"   hismul:"<<dn2[u]<<"  lazy:"<<lz2[fa[u]]<<endl; 
+		dn2[u]=(dn2[u]*1ll*ml)%mod;
+		vl[u]=(vl[u]*1ll*ml%mod+ad)%mod;
+		dn1[u]=(dn1[u]*1ll*ml%mod+ad)%mod;
+	}	
+}
+signed main(){
+	freopen("garden.in","r",stdin);
+	freopen("garden.out","w",stdout);
+	cin(n,m,q);
+	if(m==4*n)sqrtdivide::work();
+	else{
+		for(int i=1,u,v;i<=m;i++)cin(u,v),nxt[u].pb(v),nxt[v].pb(u);
+		dfs(1,0);
+		for(int u=1;u<=n;u++)dn2[u]=lz2[u]=1;
+		for(int op,u,ad;q;q--){
+			cin(op);
+			if(op==1){
+				cin(u,ad),pushdown(fa[u]),pushdown(u);
+				vl[u]=(vl[u]+ad)%mod;
+				lz1[u]=(lz1[u]+ad)%mod;
+				vl[fa[u]]=(vl[fa[u]]+ad)%mod;
+			}
+			else if(op==2){
+				cin(u,ad),pushdown(fa[u]),pushdown(u);
+				vl[u]=(vl[u]*1ll*ad)%mod;
+				lz1[u]=(lz1[u]*1ll*ad)%mod;
+				lz2[u]=(lz2[u]*1ll*ad)%mod;
+				vl[fa[u]]=(vl[fa[u]]*1ll*ad)%mod;				
+			}
+			else{
+				cin(u),pushdown(u);
+				print(vl[u]),putchar(endl);
+			}
+		}
+	}
+	return 0;
+}
+
+
+
+
+#include<iostream>
+#include<cstring>
+#include<algorithm>
+#include<cmath>
+#include<vector>
+#define N 800009
+#define LL long long
+#define pii pair<int,int>
+using namespace std;
+const LL mod=998244353;
+int n,m,q,idx=1,h[N],eg[1000009],ne[1000009];
+void add(int a,int b){
+    ++idx,eg[idx]=b,ne[idx]=h[a],h[a]=idx;
+}
+int dh[N],tot=0,st[N],en[N],fa[N];
+void dfs(int u,int f){
+    st[u]=tot;
+    for(int y,i=h[u];i;i=ne[i]){
+        y=eg[i];
+        if(y==f) continue;
+        dh[y]=++tot,fa[y]=u;
+    }
+    en[u]=tot;
+    for(int y,i=h[u];i;i=ne[i]){
+        y=eg[i];
+        if(y==f) continue;
+        dfs(y,u);
+    }
+}
+struct tree{
+    LL l,r,val,add,mul;
+}tr[N<<2];
+void pushdown(int u){
+    (tr[u<<1].mul*=tr[u].mul)%=mod,(tr[u<<1].add*=tr[u].mul)%=mod,(tr[u<<1].add+=tr[u].add)%=mod;
+    (tr[u<<1|1].mul*=tr[u].mul)%=mod,(tr[u<<1|1].add*=tr[u].mul)%=mod,(tr[u<<1|1].add+=tr[u].add)%=mod;
+    tr[u].add=0,tr[u].mul=1;
+}
+void build(int u,int l,int r){
+    tr[u]={l,r,0,0,1};
+    if(l==r) return;
+    int mid=(l+r)>>1;
+    build(u<<1,l,mid),build(u<<1|1,mid+1,r);
+}
+void momul(int u,int l,int r,int v){
+    if(l<=tr[u].l && tr[u].r<=r){
+        tr[u].mul=tr[u].mul*v%mod,tr[u].add=tr[u].add*v%mod;
+        return;
+    }
+    int mid=(tr[u].l+tr[u].r)>>1;
+    pushdown(u);
+    if(l<=mid) momul(u<<1,l,r,v);
+    if(mid+1<=r) momul(u<<1|1,l,r,v);
+}
+void moadd(int u,int l,int r,int v){
+    if(l<=tr[u].l && tr[u].r<=r){
+        tr[u].add=(tr[u].add+v)%mod;
+        return;
+    }
+    int mid=(tr[u].l+tr[u].r)>>1;
+    pushdown(u);
+    if(l<=mid) moadd(u<<1,l,r,v);
+    if(mid+1<=r) moadd(u<<1|1,l,r,v);
+}
+int query(int u,int x){
+    if(tr[u].l==tr[u].r){
+        tr[u].val=tr[u].val*tr[u].mul+tr[u].add;
+        tr[u].mul=1,tr[u].add=0;
+        tr[u].val%=mod;
+        return tr[u].val;
+    }
+    int mid=(tr[u].l+tr[u].r)>>1;
+    pushdown(u);
+    if(x<=mid) return query(u<<1,x);
+    else return query(u<<1|1,x);
+}
+int cnt[N],out[N],ca[N];
+const int X=320;
+bool cf=0;
+vector<int> v[N];
+int main() {
+    freopen("garden.in","r",stdin);
+    freopen("garden.out","w",stdout);
+
+    scanf("%d%d%d",&n,&m,&q);
+    for(int a,b,i=1;i<=m;i++){
+        scanf("%d%d",&a,&b);
+        add(a,b),add(b,a);
+    }
+    if(m==n-1){
+        build(1,1,n);
+        dh[1]=++tot,dfs(1,0);
+        for(int p,v,op,t=1;t<=q;t++){
+            scanf("%d",&op);
+            if(op==1){
+                scanf("%d%d",&p,&v);
+                if(st[p]!=en[p])moadd(1,st[p]+1,en[p],v);
+                moadd(1,dh[p],dh[p],v);
+                if(p!=1)moadd(1,dh[fa[p]],dh[fa[p]],v);
+            }else if(op==2){
+                scanf("%d%d",&p,&v);
+                if(st[p]!=en[p])momul(1,st[p]+1,en[p],v);
+                momul(1,dh[p],dh[p],v);
+                if(p!=1)momul(1,dh[fa[p]],dh[fa[p]],v);
+            }else {
+                scanf("%d",&p);
+                printf("%d\n",query(1,dh[p]));
+            }
+        }
+    }else{
+        for(int u=1;u<=n;u++){
+            for(int i=h[u];i;i=ne[i]) ++out[u];
+        }
+        for(int i=2;i<=idx;i+=2){
+            if(out[eg[i]]<out[eg[i^1]]) v[eg[i]].push_back(eg[i^1]);
+            else v[eg[i^1]].push_back(eg[i]);
+        }
+        for(int op,val,p,t=1;t<=q;t++){
+            scanf("%d",&op);
+            if(op==1){
+                scanf("%d%d",&p,&val);
+                cnt[p]=(cnt[p]+val)%mod,ca[p]=(ca[p]+val)%mod;
+                for(int y:v[p]){
+                    cnt[y]=(cnt[y]+val)%mod;
+                }
+            }else{
+                scanf("%d",&p);
+                int ans=cnt[p];
+                for(int y:v[p]){
+                    ans=(ans+ca[y])%mod;
+                }
+                printf("%d\n",ans);
+            }
+        }
+    }
+    return 0;
+}
+
+
+
+
+
+
+#include <bits/stdc++.h>
+#define int long long
+#define ls pos << 1
+#define rs pos << 1 | 1
+
+using namespace std;
+
+const int mod = 998244353;
+
+const int MAXN = 4e5 + 1;
+
+struct node {
+    int l, r, a, add, mul;
+} tree[MAXN << 2];
+
+int n, m, q, a[MAXN];
+vector<int> V[MAXN];
+
+int fa[MAXN], dfn[MAXN], rnk[MAXN], L[MAXN], R[MAXN], vis[MAXN], cnt;
+
+void bfs() {
+    queue<int> q;
+    q.push(1), vis[1] = 1, dfn[1] = ++cnt, rnk[cnt] = 1;
+    while (!q.empty()) {
+        int u = q.front(); q.pop();
+        for (int v : V[u]) 
+            if (!vis[v]) { 
+                q.push(v), vis[v] = 1, dfn[v] = ++cnt, rnk[cnt] = v, fa[v] = u;
+                if (!L[u])
+                    L[u] = dfn[v];
+                R[u] = dfn[v];
+            }
+    }
+}
+
+void build(int pos, int l, int r) {
+    tree[pos].l = l, tree[pos].r = r, tree[pos].mul = 1;
+    if (l == r)
+        return void(tree[pos].a = a[l] % mod);
+    int mid = (l + r) >> 1;
+    build(ls, l, mid);
+    build(rs, mid + 1, r);
+    tree[pos].a = (tree[ls].a + tree[rs].a) % mod;
+}
+
+void pushdown(int pos) {
+    tree[ls].a = (tree[pos].mul * tree[ls].a + ((tree[ls].r - tree[ls].l + 1) * tree[pos].add) % mod) % mod;
+    tree[rs].a = (tree[pos].mul * tree[rs].a + ((tree[rs].r - tree[rs].l + 1) * tree[pos].add) % mod) % mod;
+    tree[ls].mul = (tree[ls].mul * tree[pos].mul) % mod;
+    tree[rs].mul = (tree[rs].mul * tree[pos].mul) % mod;
+    tree[ls].add = (tree[ls].add * tree[pos].mul + tree[pos].add) % mod;
+    tree[rs].add = (tree[rs].add * tree[pos].mul + tree[pos].add) % mod;
+    tree[pos].mul = 1, tree[pos].add = 0;
+}
+
+void add(int pos, int l, int r, int ad) {
+    if (tree[pos].l >= l && tree[pos].r <= r) {
+        tree[pos].add = (tree[pos].add + ad) % mod;
+        tree[pos].a = (tree[pos].a + (tree[pos].r - tree[pos].l + 1) * ad) % mod;
+        return;
+    } pushdown(pos);
+    tree[pos].a = (tree[ls].a + tree[rs].a) % mod;
+    int mid = (tree[pos].l + tree[pos].r) >> 1;
+    if (l <= mid)
+        add(ls, l, r, ad);
+    if (r > mid)
+        add(rs, l, r, ad);
+    tree[pos].a = (tree[ls].a + tree[rs].a) % mod;
+}
+
+void mul(int pos, int l, int r, int mu) {
+    if (tree[pos].l >= l && tree[pos].r <= r) {
+        tree[pos].add = tree[pos].add * mu % mod;
+        tree[pos].mul = tree[pos].mul * mu % mod;
+        tree[pos].a = tree[pos].a * mu % mod;
+        return;
+    } pushdown(pos);
+    tree[pos].a = (tree[ls].a + tree[rs].a);
+    int mid = (tree[pos].l + tree[pos].r) >> 1;
+    if (l <= mid)
+        mul(ls, l, r, mu);
+    if (r > mid)
+        mul(rs, l, r, mu);
+    tree[pos].a = (tree[ls].a + tree[rs].a) % mod;
+}
+
+int query(int pos, int l, int r) {
+    if (tree[pos].l >= l && tree[pos].r <= r)
+        return tree[pos].a;
+    pushdown(pos);
+    int ans = 0, mid = (tree[pos].l + tree[pos].r) >> 1;
+    if (l <= mid)
+        ans = (ans + query(ls, l, r)) % mod;
+    if (r > mid)
+        ans = (ans + query(rs, l, r)) % mod;
+    return ans;
+}
+
+int ans[MAXN], adp[MAXN], dgr[MAXN];
+vector<int> E[MAXN];
+
+signed main() {
+    freopen("garden.in", "r", stdin);
+    freopen("garden.out", "w", stdout);
+    scanf("%d%d%d", &n, &m, &q);
+    for (int i = 1, u, v; i <= m; i++)
+        scanf("%d%d", &u, &v), V[u].push_back(v), V[v].push_back(u), dgr[u]++, dgr[v]++;
+    if (m == n - 1) {
+        bfs(); build(1, 1, n);
+        while (q--) {
+            int op, p, v; scanf("%d%d", &op, &p);
+            if (op == 1){
+                scanf("%d", &v), add(1, dfn[p], dfn[p], v);
+                if (fa[p])
+                    add(1, dfn[fa[p]], dfn[fa[p]], v);
+                if (L[p])
+                    add(1, L[p], R[p], v);
+            } if (op == 2) {
+                scanf("%d", &v), mul(1, dfn[p], dfn[p], v);
+                if (fa[p])
+                    mul(1, dfn[fa[p]], dfn[fa[p]], v);
+                if (L[p])           
+                    mul(1, L[p], R[p], v);
+            }
+            if (op == 3)
+                printf("%d\n", query(1, dfn[p], dfn[p]));
+        } 
+    } else {
+        int mm = sqrt(m);
+        for (int i = 1; i <= n; i++)
+            for (int j : V[i])
+                if (dgr[j] > mm)
+                    E[i].push_back(j);
+        while (q--) {
+            int op, p, v; scanf("%d%d", &op, &p);
+            if (op == 1) {
+                scanf("%d", &v);
+                ans[p] = (ans[p] + v) % mod;
+                if (dgr[p] <= mm)
+                    for (int q : V[p])
+                        ans[q] += v;
+                else
+                    adp[p] = (adp[p] + v) % mod;
+            } else {
+                int as = ans[p];
+                for (int q : E[p])
+                    as = (as + adp[q]) % mod;
+                printf("%d\n", as);
+            }
+        }
+    } return 0;
+}

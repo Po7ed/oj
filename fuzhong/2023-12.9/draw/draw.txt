@@ -1,0 +1,91 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int n, m;
+char s[505][505];
+
+int f[505][26][26], cst[505][26][26];
+
+signed main() {
+    freopen("draw.in", "r", stdin);
+    freopen("draw.out", "w", stdout);
+	scanf("%d%d", &n, &m);
+    for (int i = 1; i <= n; i++) 
+        scanf("%s", s[i] + 1);
+    for (int i = 1; i <= n; i++)
+        for (int j = 0; j < 26; j++)
+            for (int k = 0; k < 26; k++)
+                for (int l = 1; l <= m; l++)
+                    if (l & 1) 
+                        cst[i][j][k] += s[i][l] != 'a' + j;
+                    else 
+                        cst[i][j][k] += s[i][l] != 'a' + k;
+	memset(f, 0x3f, sizeof(f));
+    for (int i = 0; i < 26; i++)
+        for (int j = 0; j < 26; j++) 
+            f[0][i][j] = 0;
+	for (int i = 1; i <= n; i++)
+		for (int j = 0; j < 26; j++)
+			for (int k = 0; k < 26; k++) 
+                if (k != j) for (int l = 0; l < 26; l++)
+					if (l != j) for (int o = 0; o < 26; o++)
+						if (o != k && o != l)
+							f[i][j][k] = min(f[i][j][k], f[i - 1][l][o] + cst[i][j][k]);
+	int ans = 2147483647;
+	for (int i = 0; i < 26; i++)
+		for (int j = 0; j < 26; j++)
+			ans = min(ans, f[n][i][j]);
+	printf("%d", ans);
+    return 0;
+}
+
+
+#include <bits/stdc++.h>
+using namespace std;
+const int _ = 505;
+int n, m;
+char s[_][_];
+
+int f[_][26][26], cost[_][26][26];
+
+signed main() {
+    freopen("draw.in", "r", stdin);
+    freopen("draw.out", "w", stdout);
+	scanf("%d%d", &n, &m);
+    for (int i = 1; i <= n; i++) scanf("%s", s[i] + 1);
+    for (int i = 1; i <= n; i++) {
+        for (int j = 0; j < 26; j++) {
+            for (int k = 0; k < 26; k++) {
+                int &v = cost[i][j][k];
+                for (int l = 1; l <= m; l++) {
+                    if (l & 1) v += s[i][l] != 'a' + j;
+                    else v += (s[i][l] != 'a' + k);
+                }
+            }
+        }
+    }
+	memset(f, 0x3f, sizeof(f));
+    for (int i = 0; i < 26; i++)
+        for (int j = 0; j < 26; j++) f[0][i][j] = 0;
+	for (int i = 1; i <= n; i++) {
+		for (int j = 0; j < 26; j++) {
+			for (int k = 0; k < 26; k++) {
+				if (k == j) continue;
+				for (int l = 0; l < 26; l++) {
+					if (l == j) continue;
+					for (int o = 0; o < 26; o++) {
+						if (o != k && o != l) {
+							f[i][j][k] = min(f[i][j][k], f[i - 1][l][o] + cost[i][j][k]);
+						}
+					}
+				}
+			}
+		}
+	}
+	int ans = INT_MAX;
+	for (int i = 0; i < 26; i++)
+		for (int j = 0; j < 26; j++)
+			ans = min(ans, f[n][i][j]);
+	printf("%d", ans);
+}
