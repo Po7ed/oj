@@ -2,9 +2,7 @@
 using namespace std;
 
 typedef long long ll;
-constexpr ll mod=1e9+7;
-constexpr int N=20,S=N*10;
-int T;
+constexpr int N=10,S=N*10;
 
 int a[N];
 ll mem[N][S][2];
@@ -15,7 +13,7 @@ ll dfs(int i,int sum=0,bool small=false)
 	if(!i)return now=ll(sum);
 	now=0;
 	for(int j=0;j<=9;j++)if(small||j<=a[i])
-		now=(now+dfs(i-1,sum+j,small||j<a[i]))%mod;// or small||j^a[i]
+		now+=dfs(i-1,sum+j,small||j<a[i]);// or small||j^a[i]
 	return now;
 }
 
@@ -29,12 +27,8 @@ ll calc(ll x)
 
 int main()
 {
-	scanf("%d",&T);
-	ll l,r;
-	while(T--)
-	{
-		scanf("%lld %lld",&l,&r);
-		printf("%lld\n",(calc(r)-calc(l-1)+(mod<<1ll))%mod);
-	}
+	ll n;
+	scanf("%lld",&n);
+	printf("%lld\n",calc(n));
 	return 0;
 }
