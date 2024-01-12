@@ -12,17 +12,17 @@ The first line of each test case consists of an integer $N$.
 
 The second line consists of $N$ integers $h_i$ $(1\le h_i\le 10^9)$ denoting the initial height of the $i$ th plant in inches.
 
-The third line consists of N integers ai (1≤ai≤109)(1≤≤109) denoting the number of inches the $i$ th plant grows each day.
+The third line consists of N integers ai ($1\le a_i\le 109$) denoting the number of inches the $i$ th plant grows each day.
 
 The fourth line consists of N distinct integers ti denoting the array that FJ gives you.
 
-It is guaranteed that the sum of N over all test cases does not exceed 2⋅1052⋅105.
+It is guaranteed that the sum of N over all test cases does not exceed $2\cdot 10^5$.
 
 
 
 #### OUTPUT FORMAT (pipe stdout):
 
-Output T lines, the answer to each test case on a different line. If it is not possible, output −1−1.
+Output T lines, the answer to each test case on a different line. If it is not possible, output $-1$.
 
 **Note that the large size of integers involved in this problem may require the use of 64-bit integer data types (e.g., a "long long" in C/C++).**
 

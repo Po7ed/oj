@@ -74,7 +74,7 @@ using namespace std;
  * CE 吓死
  * 17:04 交，还是 WA，润。
  */
-constexpr int N=314514,INF=0x7fffffff;
+constexpr int N=314514;
 int n,cnt;
 char s[N];
 int a[N],mat[N],beg[N];//^ 连通块长度；最长传播晚数，最小开始牛数
@@ -82,21 +82,20 @@ int a[N],mat[N],beg[N];//^ 连通块长度；最长传播晚数，最小开始�
 int main()
 {
 	scanf("%d\n%s",&n,s+1);
-	int tmp=0,fir=0,lst;
+	int tmp=0;
 	for(int i=1;i<=n;i++)//^ 统计连通块长度
 	{
 		if(s[i]=='0'&&tmp)a[++cnt]=tmp,tmp=0;
-		else if(s[i]=='1')tmp++,fir||(fir=i),lst=i;
+		else if(s[i]=='1')tmp++;
 	}
 	if(tmp)a[++cnt]=tmp;//! this
-	int mimat=INF,d;//! this:0x3f...
+	int mimat=0x7fffffff,d;//! this:0x3f...
 	for(int i=2;i<cnt;i++)
 	{
 		mat[i]=(a[i]-1)>>1;//^ calc
 		mimat=min(mimat,mat[i]);//^ get
 	}
-	mimat=min(mimat,min((fir==1?a[1]-1:((a[1]-1)>>1)),\
-	(lst==n?a[cnt]-1:((a[cnt]-1)>>1))));
+	mimat=min(mimat,min(a[1],a[cnt])-1);
 	d=mimat<<1|1;//^ calc d
 	int ans=0;
 	for(int i=1;i<=cnt;i++)//todo min time how to calc

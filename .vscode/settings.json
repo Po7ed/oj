@@ -1,5 +1,5 @@
 {
-	"files.defaultLanguage": "cpp", // ctrl+N新建文件后默认的语言
+	//"files.defaultLanguage": "cpp", // ctrl+N新建文件后默认的语言
 	"editor.formatOnType": false,  // 输入分号(C/C++的语句结束标识)后自动格式化当前这一行的代码
 	"editor.acceptSuggestionOnEnter": "on",
 	"code-runner.runInTerminal": true, // 设置成false会在“输出”中输出，无法输入

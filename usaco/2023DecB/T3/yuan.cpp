@@ -1,6 +1,6 @@
 #include <iostream>
 #include <algorithm>
-#include <cmath>
+// #include <cmath>
 using namespace std;
 /*
  * 15:30 开题
@@ -46,7 +46,6 @@ using namespace std;
  */
 
 typedef long long ll;
-typedef double db;
 constexpr int N=214514;
 struct p
 {
@@ -55,15 +54,12 @@ struct p
 };
 p a[N];
 int T,n;
-db ans1,ans2;
-ll d[N],e[N];
-db t[N];
+ll ans1,ans2;
+ll d[N],e[N],t[N];
 
 int main()
 {
-	// printf("%d",(-4)/(-2));
-	freopen("P9976_5.in","r",stdin);
-	freopen("out.txt","w",stdout);
+	// freopen("out.txt","w",stdout);
 	scanf("%d",&T);
 	while(T--)
 	{
@@ -73,26 +69,25 @@ int main()
 		for(int i=1;i<=n;i++)scanf("%lld",&a[i].rk);
 		if(n==1){puts("0");goto nextcase;}
 		sort(a+1,a+n+1);
-		ans1=-1;
+		ans1=0;
 		ans2=0x3f3f3f3f3f3f3f3f;
 		for(int i=2;i<=n;i++)
 		{
 			d[i]=a[i-1].h-a[i].h;
 			e[i]=a[i].v-a[i-1].v;
 			if(e[i]<=0&&d[i]>=0){puts("-1");goto nextcase;}
-			if(e[i]<0&&d[i]<0){t[i]=1.0*d[i]/e[i];ans2=min(ans2,t[i]);continue;}
+			if(e[i]<0&&d[i]<0){t[i]=d[i]/e[i];ans2=min(ans2,t[i]);continue;}
 			if(e[i]==0&&d[i]<0){t[i]=0;}
-			else t[i]=1.0*d[i]/e[i];
+			else t[i]=d[i]/e[i]+1;
 			ans1=max(ans1,t[i]);
 		}
-		// printf("%lf:%lf\t",ans1,ans2);
-		if(abs(ans1)<=1e-7){puts("0");goto nextcase;}
-		ans1=floor(ans1)+1;
-		// ans2=floor(ans2)+1;
-		if(ans1>=ans2)puts("-1");
+		if(ans1>ans2)
+		{
+			puts("-1");
+		}
 		else
 		{
-			printf("%lld\n",ll(ans1));
+			printf("%lld\n",ans1);
 		}
 		nextcase:;
 	}
