@@ -2,30 +2,38 @@
 #include <cmath>
 using namespace std;
 
-inline double root(double a,double b,double c)
+typedef double db;
+
+inline db root(db a,db b,db c)
 {
 	return (-b+sqrt(b*b-4*a*c))/(2*a);
 }
 
-double a,v,l,d,w,t1,s1,s2,t2,s3,t3;
+db a,v,l,d,w,t1,s1,s2,t2,s3,t3,tt,ss;
 
 int main()
 {
 	scanf("%lf %lf\n%lf %lf %lf",&a,&v,&l,&d,&w);
-	t1=w/a;
-	s1=w*t1/2;
-	printf("%.10lf\n",s1);
-	if(s1>=d)
+	tt=w/a;
+	ss=.5*tt*w;
+	t1=v/a;
+	s1=.5*t1*v;
+	s2=l-s1;
+	t2=s2/v;
+	if(w>=v||ss>=d)
 	{
-		printf("%.10lf",root(a/2,0,-l));
+		if(s1>l)
+		{
+			printf("%.10lf",root(.5*a,0,-l));
+		}
+		else
+		{
+			printf("%.10lf",t1+t2);
+		}
 	}
-	else
+	else if(d>)
 	{
-		s2=d-s1;
-		t2=root(.25,w+a/2,-s2);
-		s3=l-d;
-		t3=root(a/2,w,-s3);
-		printf("%.10lf",t1+t2+t3);
+		
 	}
 	return 0;
 }

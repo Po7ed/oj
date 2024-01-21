@@ -1,0 +1,41 @@
+#include<bits/stdc++.h>
+using namespace std;
+int n,m,h[100005],cnt,a,b,c,num;
+long long dis[100005];
+priority_queue<pair<long long,int> >q;
+struct edge{
+	int v,w,nex;
+}e[400005];
+void add(int x,int y,int z){
+	e[++cnt].v=y;
+	e[cnt].w=z;
+	e[cnt].nex=h[x];
+	h[x]=cnt;
+}
+int main(){
+	freopen("MK.in","r",stdin);
+	freopen("MK.out","w",stdout);
+	scanf("%d%d",&n,&m);
+	for(int i=1;i<=m;i++){
+		scanf("%d%d%d",&a,&b,&c);
+		add(a,b,c);
+		add(b,a,c);
+	}
+	memset(dis,0x7f,sizeof(dis));
+	long long s=dis[n];
+	dis[1]=0;
+	q.push(make_pair(0,1));
+	while(!q.empty()){
+		num=q.top().second;
+		q.pop();
+		for(int i=h[num];i;i=e[i].nex)
+			if(dis[e[i].v]>dis[num]+e[i].w){
+				dis[e[i].v]=dis[num]+e[i].w;
+				q.push(make_pair(-dis[e[i].v],e[i].v));
+			}
+	}
+	if(dis[n]==s)dis[n]=-1;
+	printf("%lld",dis[n]);
+	return 0;
+}
+//这和图论有什么关系啊？？？ 

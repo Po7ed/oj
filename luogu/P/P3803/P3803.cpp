@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cmath>
 #include <algorithm>
+#include <ctime>
 using namespace std;
 
 constexpr int N=1<<21|1;
@@ -15,7 +16,7 @@ struct cp
 	inline cp operator - (cp y){return cp(a-y.a,b-y.b);}
 	inline cp operator * (cp y){return cp(a*y.a-b*y.b,a*y.b+b*y.a);}
 	// inline cp operator ! (){return cp(a,-b);}// gong'e
-	inline void print(){printf("%lf+%lfi",a,b);}
+	// inline void print(){printf("%lf+%lfi",a,b);}
 };
 
 int n,m;
@@ -54,19 +55,22 @@ void fft(cp *f,int len=n)// dft&idft
 	}
 }
 
+inline void swp(cp* f){for(int i=0;i<n;i++)if(rev[i]<i)swap(f[rev[i]],f[i]);}
+
 int main()
 {
+	clock_t beg=clock();
+	freopen("rand.in","r",stdin);
+	freopen("func.out","w",stdout);
 	scanf("%d %d",&n,&m);
 	for(int i=0;i<=n;i++)scanf("%lf",&f[i].a);
 	for(int i=0;i<=m;i++)scanf("%lf",&g[i].a);
 	for(m+=n,n=1;n<=m;n<<=1,cn++);// up to 2^cn
 	for(int i=0;i<n;i++)rev[i]=(rev[i>>1]>>1)|((i&1)?(n>>1):0);
-	for(int i=0;i<n;i++)if(rev[i]<i)swap(f[rev[i]],f[i]);// swaps
-	for(int i=0;i<n;i++)if(rev[i]<i)swap(g[rev[i]],g[i]);
-	init(),fft(f),fft(g);/* puts(""); */
+	swp(f),swp(g),init(),fft(f),fft(g);/* puts(""); */
 	for(int i=0;i<n;i++)f[i]=f[i]*g[i];
-	for(int i=0;i<n;i++)if(rev[i]<i)swap(f[rev[i]],f[i]);
-	reverse(w,w+n+1),fft(f);
-	for(int i=0;i<=m;i++)printf("%d ",int((f[i].a/n)+0.49));
+	swp(f),reverse(w,w+n+1),fft(f);
+	for(int i=0;i<=m;i++)printf("%d ",int((f[i].a/n)+.5));
+	printf("***\n%ldms.\n",clock()-beg);
 	return 0;
 }
