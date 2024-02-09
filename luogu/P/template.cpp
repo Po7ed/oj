@@ -10,7 +10,7 @@
 
 typedef long long ll;
 typedef unsigned long long ull;
-typedef double db
+typedef double db;
 inline int ri()
 {
 	int res=0,f=1;
